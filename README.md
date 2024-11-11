@@ -1,4 +1,4 @@
-# PerturbGBM: Self-training with Synthetic Gold Standard of Single Cell Data to Infer Gene Regulatory Networks  
+# PSGRN: Gene regulatory network inference from single-cell perturbational data through self-training with synthetic gold standards
 
 This repository includes the codes of our winning solution on the [CausalBench Challenge](https://www.gsk.ai/causalbench-challenge/), and for our paper "PerturbGBM: Self-training with Synthetic Gold Standard of Single Cell Data to Infer Gene Regulatory Networks". The method was developed by Kaiwen Deng ([dengkw@umich.edu](mailto:dengkw@umich.edu)) and Yuanfang Guan ([gyuanfan@umich.edu](mailto:gyuanfan@umich.edu)). Please contact us if you have any questions or suggestions.
 
