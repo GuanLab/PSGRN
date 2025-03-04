@@ -1,6 +1,6 @@
 # PSGRN: Gene regulatory network inference from single-cell perturbational data through self-training with synthetic gold standards
 
-This repository includes the codes of our winning solution on the [CausalBench Challenge](https://www.gsk.ai/causalbench-challenge/), and for our paper "PerturbGBM: Self-training with Synthetic Gold Standard of Single Cell Data to Infer Gene Regulatory Networks". The method was developed by Kaiwen Deng ([dengkw@umich.edu](mailto:dengkw@umich.edu)) and Yuanfang Guan ([gyuanfan@umich.edu](mailto:gyuanfan@umich.edu)). Please contact us if you have any questions or suggestions.
+This repository includes the codes of our winning solution on the [CausalBench Challenge](https://www.gsk.ai/causalbench-challenge/), and for our paper "PSGRN: Self-training with Synthetic Gold Standard of Single Cell Data to Infer Gene Regulatory Networks". The method was developed by Kaiwen Deng ([dengkw@umich.edu](mailto:dengkw@umich.edu)) and Yuanfang Guan ([gyuanfan@umich.edu](mailto:gyuanfan@umich.edu)). Please contact us if you have any questions or suggestions.
 
 [CausalBench](https://arxiv.org/abs/2210.17283) is a comprehensive benchmark suite for evaluating network inference methods on perturbational single-cell gene expression data. 
 CausalBench introduces several biologically meaningful performance metrics and operates on two large, curated and openly available benchmark data sets for evaluating methods on the inference of gene regulatory networks from single-cell data generated under perturbations.
@@ -33,7 +33,7 @@ CausalBench introduces several biologically meaningful performance metrics and o
 
 ### Run the full benchmark suite to replicate the paper results
 
-* **PerturbGBM**
+* **PSGRN**
 
     ```bash
     python causalscbench/apps/main_app.py \
@@ -60,7 +60,7 @@ CausalBench introduces several biologically meaningful performance metrics and o
 
     * `--do_filter` controls whether to select only the strong perturbations
 
-    * User can modify the `N` in `./src/main.py` to control how many gene regulatory pairs should be inferred. PerturbGBM 1K is `N = 1000`, and PerturbGBM 5K is `N = 5000`
+    * User can modify the `N` in `./src/main.py` to control how many gene regulatory pairs should be inferred. PSGRN 1K is `N = 1000`, and PSGRN 5K is `N = 5000`
 
 * **Other GRN or causal inference methods**
 
@@ -85,13 +85,13 @@ CausalBench introduces several biologically meaningful performance metrics and o
 
 ### Benchmark with BEELINE data and evaluation pipeline
 
-We have two approaches to run PerturbGBM within the BEELINE evaluation framework:
+We have two approaches to run PSGRN within the BEELINE evaluation framework:
 
-1. **Integrating PerturbGBM directly into BEELINE**:  
-   You can add our PerturbGBM method to the BEELINE pipeline by following the developer guide available [here](https://murali-group.github.io/Beeline/BEELINE.html#developer-guide). This involves modifying the existing BEELINE codebase to include our method for gene regulatory network (GRN) inference.
+1. **Integrating PSGRN directly into BEELINE**:  
+   You can add our PSGRN method to the BEELINE pipeline by following the developer guide available [here](https://murali-group.github.io/Beeline/BEELINE.html#developer-guide). This involves modifying the existing BEELINE codebase to include our method for gene regulatory network (GRN) inference.
 
-2. **Using BEELINE-provided data in the PerturbGBM pipeline**:  
-   Alternatively, you can use the data provided by BEELINE within our PerturbGBM pipeline. After generating GRN predictions, incorporate the results into the BEELINE pipeline to compute the evaluation metrics.
+2. **Using BEELINE-provided data in the PSGRN pipeline**:  
+   Alternatively, you can use the data provided by BEELINE within our PSGRN pipeline. After generating GRN predictions, incorporate the results into the BEELINE pipeline to compute the evaluation metrics.
 
    Here is an example of using the data from BEELINE to make inferences
    ```bash
