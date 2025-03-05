@@ -14,7 +14,7 @@ CausalBench introduces several biologically meaningful performance metrics and o
 
 * Use pip:
     ```bash
-    pip install causalbench=1.1.2
+    pip install causalbench==1.1.2
     pip install lightgbm
     pip uninstall causalbench  # we only need its dependencies 
     ```
@@ -33,12 +33,14 @@ CausalBench introduces several biologically meaningful performance metrics and o
 
 ### Run the full benchmark suite to replicate the paper results
 
-* **PSGRN**
+  Sample running commands can be found in `run.sh`  
 
+* **PSGRN**
     ```bash
     python causalscbench/apps/main_app.py \
-            --dataset_name "weissmann_rpe1" \  
+            --dataset_name "weissmann_rpe1" \
             --output_directory "/path/to/output/" \
+            --exp_id "psgrn_rpe1_1_1" \
             --data_directory "/path/to/data/" \
             --training_regime "partial_interventional" \
             --partial_intervention_seed 0 \
@@ -51,6 +53,8 @@ CausalBench introduces several biologically meaningful performance metrics and o
             --do_filter
     ```
     * `--dataset_name` could also be "weissmann_k562" to run on the K562 dataset
+
+    * `--exp_id` is the subfolder name within the `output_directory`. The default is a random 6-digit number if not set specifically.
 
     * We use different `--fraction_partial_intervention` with 0, 0.05, 0.15, 0.25, 0.5, 0.75, 1.0 to study the model's scalability under different fractions of interventional data. 0 means no interventional data, *i.e*, purely observational data
 
@@ -69,7 +73,8 @@ CausalBench introduces several biologically meaningful performance metrics and o
     For example:
     ```bash
     python causalscbench/apps/main_app.py \
-            --dataset_name "weissmann_rpe1" \  
+            --dataset_name "weissmann_rpe1" \
+            --exp_id "grnboost_rpe1_1_1" \ 
             --output_directory "/path/to/output/" \
             --data_directory "/path/to/data/" \
             --training_regime "partial_interventional" \
