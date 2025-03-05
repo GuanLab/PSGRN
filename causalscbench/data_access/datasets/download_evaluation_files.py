@@ -11,13 +11,18 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 """
+import os
 from causalscbench.data_access.utils import download
 
 
+# Due to CORUM has changed its API, the following function will not work.
+# Instead, we directly download the file from database and store it in the data folder.
+# version 5.1
 def download_corum(output_directory):
-    URL = "https://mips.helmholtz-muenchen.de/corum/download/releases/current/humanComplexes.txt.zip"
+    # URL = "https://mips.helmholtz-muenchen.de/corum/download/releases/current/humanComplexes.txt.zip"
     filename = "corum_complexes.txt.zip"
-    path = download.download_if_not_exist(URL, output_directory, filename)
+    # path = download.download_if_not_exist(URL, output_directory, filename)
+    path = os.path.join(output_directory, filename)
     return path
 
 

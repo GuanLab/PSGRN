@@ -42,22 +42,22 @@ class Evaluator(object):
                 edges.add((i, j))
         return list(edges)
 
-    def evaluate_network(self, network: List[Tuple], directed: bool = False) -> Dict:
-        true_positives = 0
-        if not directed:
-            network_undirected = set()
-            for i, j in network:
-                network_undirected.add((i, j))
-                network_undirected.add((j, i))
-            network = network_undirected
-        for edge in network:
-            if edge in self.ground_truth_subnetwork:
-                true_positives += 1
-        return {
-            "true_positives": true_positives if directed else true_positives / 2,
-        }
+    # def evaluate_network(self, network: List[Tuple], directed: bool = False) -> Dict:
+    #     true_positives = 0
+    #     if not directed:
+    #         network_undirected = set()
+    #         for i, j in network:
+    #             network_undirected.add((i, j))
+    #             network_undirected.add((j, i))
+    #         network = network_undirected
+    #     for edge in network:
+    #         if edge in self.ground_truth_network:
+    #             true_positives += 1
+    #     return {
+    #         "true_positives": true_positives if directed else true_positives / 2,
+    #     }
         
-    def evaluate_network_full(self, network: List[Tuple], directed: bool = False, gene_names: List[str] = None) -> Dict:
+    def evaluate_network(self, network: List[Tuple], directed: bool = False, gene_names: List[str] = None) -> Dict:
         true_positives, false_positives, false_negatives = 0, 0, 0
         ground_truth_subnetwork = set()
         for i, j in self.ground_truth_network:

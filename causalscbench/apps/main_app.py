@@ -15,6 +15,8 @@ limitations under the License.
 import json
 import os
 import time
+import sys
+sys.path.insert(0, "../../")  # a temp solution to solve the path issue
 
 import pandas as pd
 import slingpy as sp
@@ -275,7 +277,7 @@ class MainApp:
             "filter": self.filter,
         }
         with open(os.path.join(self.output_directory, "arguments.json"), "w") as output:
-            json.dump(arguments, output)
+            json.dump(arguments, output, indent=4)
         start_time = time.time()
         logging.info("Starting model training.")
         output_network = self.model(
@@ -288,21 +290,21 @@ class MainApp:
         logging.info("Model training finished.")
         end_time = time.time()
         logging.info("Evaluating model.")
-        corum_evaluation = self.corum_evaluator.evaluate_network(output_network)
-        ligand_receptor_evaluation = self.lr_evaluator.evaluate_network(output_network)
+        corum_evaluation = self.corum_evaluator.evaluate_network(output_network, gene_names=gene_names)
+        ligand_receptor_evaluation = self.lr_evaluator.evaluate_network(output_network, gene_names=gene_names)
         string_network_evaluation = self.string_network_evaluator.evaluate_network(
-            output_network
+            output_network, gene_names=gene_names
         )
         string_physical_evaluation = self.string_physical_evaluator.evaluate_network(
-            output_network
+            output_network, gene_names=gene_names
         )
         chipseq_evaluation = self.chipseq_evaluator.evaluate_network(
-            output_network, directed=True
+            output_network, directed=True, gene_names=gene_names
         )
         pooled_biological_evaluation = (
-            self.pooled_biological_evaluator.evaluate_network(output_network)
+            self.pooled_biological_evaluator.evaluate_network(output_network, gene_names=gene_names)
         )
-        pooled_biological_sigificant_evaluation = self.pooled_biological_significant_evaluator.evaluate_network(output_network, directed=True)
+        pooled_biological_sigificant_evaluation = self.pooled_biological_significant_evaluator.evaluate_network(output_network, directed=True, gene_names=gene_names)
         quantitative_test_evaluation = self.quantitative_evaluator.evaluate_network(
             output_network, self.max_path_length, self.check_false_omission_rate, self.omission_estimation_size,
         )
@@ -319,7 +321,7 @@ class MainApp:
             "run_time": end_time - start_time,
         }
         with open(os.path.join(self.output_directory, "metrics.json"), "w") as output:
-            json.dump(metrics, output)
+            json.dump(metrics, output, indent=4)
         pd.DataFrame(output_network).to_csv(
             os.path.join(self.output_directory, "output_network.csv")
         )

@@ -38,7 +38,7 @@ class CreateEvaluationDatasets:
         path_corum = download_evaluation_files.download_corum(self.data_directory)
         df = pd.read_csv(
             path_corum,
-            index_col="subunits(Gene name)",
+            index_col="subunits_gene_name",
             sep="\t",
             compression="zip",
         )
