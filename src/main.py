@@ -12,6 +12,13 @@ from tqdm import tqdm
 
 
 def get_topK_pairs(expression_matrix: pd.DataFrame, T: float = 0.5):
+    # add cache
+    obs_expr = {gene: expression_matrix.loc["non-targeting", gene] 
+                for gene in tqdm(expression_matrix.columns, desc="Cache observations")}
+    self_inv_expr = {gene: expression_matrix.loc[gene, gene]
+                     for gene in tqdm(expression_matrix.columns, desc="Cache self interventions")
+                     if gene in expression_matrix.index}
+    
     corrs = []
     for gene1 in tqdm(expression_matrix.columns):  # from
         for gene2 in expression_matrix.columns:  # target
@@ -20,39 +27,46 @@ def get_topK_pairs(expression_matrix: pd.DataFrame, T: float = 0.5):
                 continue
 
             if gene1 in expression_matrix.index:
-                exp_obs_gene1 = expression_matrix.loc["non-targeting", gene1]
-                exp_inv_gene1 = expression_matrix.loc[gene1, gene1]
-                exp_obs_gene2 = expression_matrix.loc["non-targeting", gene2]
+                exp_obs_gene1 = obs_expr[gene1]
+                exp_inv_gene1 = self_inv_expr[gene1]
+                exp_obs_gene2 = obs_expr[gene2]
                 exp_inv_gene2 = expression_matrix.loc[gene1, gene2]
 
                 exp_gene1 = pd.concat([exp_obs_gene1.sample(exp_inv_gene1.shape[0], random_state=0), exp_inv_gene1])
                 exp_gene2 = pd.concat([exp_obs_gene2.sample(exp_inv_gene2.shape[0], random_state=0), exp_inv_gene2])
             else:
-                exp_gene1 = expression_matrix.loc["non-targeting", gene1]
-                exp_gene2 = expression_matrix.loc["non-targeting", gene2]
+                exp_gene1 = obs_expr[gene1]
+                exp_gene2 = obs_expr[gene2]
             corrs.append([gene1, gene2, np.abs(exp_gene1.corr(exp_gene2))])
 
     corrs = pd.DataFrame(corrs, columns=["From", "To", "weights"])\
         .sort_values(by="weights", ascending=False)
     topK_pairs = [(i, j) for i, j in corrs.loc[corrs["weights"] > T, ["From", "To"]].values]
-
     return corrs, topK_pairs
 
 def create_dataset(expression_matrix, pairs):
     dataset = []
     gene_names = expression_matrix.columns
     expression_summary = expression_matrix.reset_index().groupby("index").mean()
+    
+    # add cache
+    obs_expr = {gene: expression_summary.loc["non-targeting", gene] 
+                for gene in tqdm(gene_names, desc="Cache observations")}
+    self_inv_expr = {gene: expression_summary.loc[gene, gene] 
+                     for gene in tqdm(gene_names, desc="Cache self interventions")
+                     if gene in expression_summary.index}
+    pairs = set(pairs)
 
-    for gene1 in gene_names:
+    for gene1 in tqdm(gene_names):
         for gene2 in gene_names:
 
             if gene1 == gene2:
                 continue
 
             index = gene1 + "_" + gene2
-            data = [index] + [expression_summary.loc["non-targeting", gene1],
-                              expression_summary.loc["non-targeting", gene2],
-                              expression_summary.loc[gene1, gene1] if gene1 in expression_summary.index else 0,
+            data = [index] + [obs_expr[gene1],
+                              obs_expr[gene2],
+                              self_inv_expr.get(gene1, 0),
                               expression_summary.loc[gene1, gene2] if gene1 in expression_summary.index else np.nan]
             if (gene1, gene2) in pairs:
                 data += [1]
