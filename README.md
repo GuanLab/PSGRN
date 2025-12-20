@@ -5,19 +5,20 @@ This repository includes the codes of our winning solution on the [CausalBench C
 [CausalBench](https://arxiv.org/abs/2210.17283) is a comprehensive benchmark suite for evaluating network inference methods on perturbational single-cell gene expression data. 
 CausalBench introduces several biologically meaningful performance metrics and operates on two large, curated and openly available benchmark data sets for evaluating methods on the inference of gene regulatory networks from single-cell data generated under perturbations.
 
-## Install
+## Environment
 
-* Use conda:
-    ```bash
-    conda env create -f environment.yml
-    ```
+```
+conda create -n causal python=3.10
+conda activate causal
 
-* Use pip:
-    ```bash
-    pip install causalbench==1.1.2
-    pip install lightgbm
-    pip uninstall causalbench  # we only need its dependencies 
-    ```
+pip install causalbench==1.1.2
+pip install lightgbm
+pip uninstall causalbench -y
+
+pip install pandas scikit-learn matplotlib seaborn scanpy --no-cache-dir
+pip install numpy==1.24.4
+pip install dask==2023.5.0 distributed==2023.5.0
+```
 
 ## Usage
 
@@ -37,6 +38,8 @@ CausalBench introduces several biologically meaningful performance metrics and o
 
 * **PSGRN**
     ```bash
+    # to use the customized causalscbench
+    export PYTHONPATH="./"
     python causalscbench/apps/main_app.py \
             --dataset_name "weissmann_rpe1" \
             --output_directory "/path/to/output/" \
@@ -72,6 +75,7 @@ CausalBench introduces several biologically meaningful performance metrics and o
 
     For example:
     ```bash
+    export PYTHONPATH="./"
     python causalscbench/apps/main_app.py \
             --dataset_name "weissmann_rpe1" \
             --exp_id "grnboost_rpe1_1_1" \ 
@@ -100,6 +104,7 @@ We have two approaches to run PSGRN within the BEELINE evaluation framework:
 
    Here is an example of using the data from BEELINE to make inferences
    ```bash
+   export PYTHONPATH="./"
    python causalscbench/apps/beeline_app.py \
             --beeline_dataset_path "example/GSD/ExpressionData.csv" \  
             --output_directory "/path/to/output/" \
@@ -114,3 +119,4 @@ We have two approaches to run PSGRN within the BEELINE evaluation framework:
 [https://github.com/Murali-group/Beeline](https://github.com/Murali-group/Beeline)
 
 Codes in `causalscbench` folder are from [https://github.com/causalbench/causalbench](https://github.com/causalbench/causalbench). We modified the `biological_evaluation.py` so it can now provide data for calculation precisions and recalls. We also added a `beeline_app.py` to run on the external datasets based on the `main_app.py`
+
